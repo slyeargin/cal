@@ -3,10 +3,15 @@ class Month
 
   def initialize(month, year)
     @month = month
+    @year = year
   end
 
   def name
     MONTHS[@month]
+  end
+
+  def header
+    "#{name} #{@year}".center(20).rstrip
   end
 
   def to_s
