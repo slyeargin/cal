@@ -80,6 +80,7 @@ class Year
         block_count += 1
       end
     end
+    output << "\n"
     output
   end
 
