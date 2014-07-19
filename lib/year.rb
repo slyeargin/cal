@@ -65,10 +65,6 @@ class Year
               row_block << "\n"
               break
             end
-          elsif month1[index] === nil && month3[index] === nil && index == 5
-            row_block = "#{month1[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
-            row_block << "#{month2[index]}\n\n"
-            break
           else
             row_block = "#{month1[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
             row_block << "#{month2[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
