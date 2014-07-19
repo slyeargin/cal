@@ -12,15 +12,15 @@ else
   year = ARGV[1].to_i
 end
 
-if month == nil
-  year = Year.new(year)
-  puts year.to_s
-elsif ARGV[2].to_i != 0
+if ARGV[2].to_i != 0
   puts ">usage: cal [month] [year]"
-elsif month > 12 && month != nil
-  puts ">cal: #{month} is not a month number (1..12)"
 elsif year < 1800 or year > 3000
   puts ">cal: #{year} is not in range (1800..3000)"
+elsif month == nil
+  year = Year.new(year)
+  puts year.to_s
+elsif month > 12 && month != nil
+  puts ">cal: #{month} is not a month number (1..12)"
 else
   month = Month.new(month, year)
   puts month.to_s
