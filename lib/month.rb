@@ -16,7 +16,7 @@ class Month
   end
 
   def header
-    "#{name} #{@year.year}".center(20).rstrip
+    "#{name} #{@year.year}".center(LINE_LENGTH).rstrip
   end
 
   def length
@@ -27,33 +27,59 @@ class Month
     end
   end
 
-  def to_s
-    day_count = 1
-    output = header
-    output << WEEKDAYS
-    first_day = ZellersCongruence.calculate(month, @year.year)
-    day_of_week_count = first_day - 1
-    if first_day == 0
-      output << ("\s1").rjust(LINE_LENGTH)
-      day_count += 1
-      day_of_week_count = 7
+  def build_day(count, weekday)
+    if count < 10 && weekday > 0
+      day = "\s\s#{count}"
+    elsif count >= 10 && weekday == 0
+      day = "#{count}"
+    else
+      day = "\s#{count}"
     end
+    day
+  end
+
+  def build_week(week, align_left=false)
+    if align_left
+      return week.join
+    else
+      week << "\n"
+      return week.join.rjust(LINE_LENGTH+1)
+    end
+  end
+
+  def build_month(month, year)
+    day_count = 1
+    first_day = ZellersCongruence.calculate(month, year)
+    day_of_week_count = (first_day == 0) ? 6 : first_day - 1
+    output = []
+    week = []
+    week_count = 0
     until day_count == self.length + 1
       if day_of_week_count < 7
-        if day_count < 10 && day_of_week_count > 0
-          output << "\s\s#{day_count}"
-        elsif day_count > 10 && day_of_week_count == 0
-          output << "#{day_count}"
-        else
-          output << "\s#{day_count}"
-        end
+        week << build_day(day_count, day_of_week_count).rstrip
         day_of_week_count +=1
         day_count += 1
       else
-        output << "\n"
+        output << build_week(week)
+        week_count += 1
         day_of_week_count = 0
+        week = []
       end
     end
+    if week.size > 0
+      output << build_week(week, true)
+    end
+    while week_count < 6
+      output << "\n"
+      week_count += 1
+    end
+    output.join
+  end
+
+  def to_s
+    output = header
+    output << WEEKDAYS
+    output << build_month(@month, @year.year)
     output
   end
 end

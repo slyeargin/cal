@@ -4,8 +4,24 @@ require_relative 'lib/month'
 require_relative 'lib/year'
 require_relative 'lib/zellers_congruence'
 
-month = ARGV[0].to_i
-year = ARGV[1].to_i
+if ARGV[0].to_s.size == 4 && ARGV[1].to_i == 0 && ARGV[2].to_i == 0
+  year = ARGV[0].to_i
+  month = nil
+else
+  month = ARGV[0].to_i
+  year = ARGV[1].to_i
+end
 
-month = Month.new(month, year)
-puts month.to_s
+if month == nil
+  year = Year.new(year)
+  puts year.to_s
+elsif ARGV[2].to_i != 0
+  puts ">usage: cal [month] [year]"
+elsif month > 12 && month != nil
+  puts ">cal: #{month} is not a month number (1..12)"
+elsif year < 1800 or year > 3000
+  puts ">cal: #{year} is not in range (1800..3000)"
+else
+  month = Month.new(month, year)
+  puts month.to_s
+end
