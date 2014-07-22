@@ -9,7 +9,7 @@ class Year
     "        July                 August              September",
     "      October               November              December"
   ]
-  WEEKDAYS = "\nSu Mo Tu We Th Fr Sa\s\sSu Mo Tu We Th Fr Sa\s\sSu Mo Tu We Th Fr Sa\n"
+  WEEKDAYS = "\nSu Mo Tu We Th Fr Sa\s\sSu Mo Tu We Th Fr Sa\s\sSu Mo Tu We Th Fr Sa"
   BLOCK_LENGTH = 6
 
   def initialize(year)
@@ -27,57 +27,50 @@ class Year
   end
 
   def to_s
-    output = "#{@year}".center(LINE_LENGTH).rstrip
-    output << "\n\n"
-    block_count = 0
+    build_year
+  end
+
+  private
+
+  def build_year
+    year = "#{@year}".center(LINE_LENGTH).rstrip
+    year << "\n\n"
+    quarter_count = 0
     month_count = 0
+    while quarter_count < 4
+      year << build_quarter(quarter_count, month_count)
+      quarter_count += 1
+      month_count += 3
+    end
+    year
+  end
+
+  def build_quarter(quarter_count, month_count)
     month_block = []
-    while block_count < 4
+    end_of_quarter = month_count + 3
+    while month_count < end_of_quarter
       if month_count == 0 || month_count%3 === 0
-        output << HEADER[block_count]
-        output << WEEKDAYS
+        quarter = HEADER[quarter_count]
+        quarter << WEEKDAYS
       end
       month_count += 1
       @month = Month.new(month_count, @year)
       month_block << @month.build_month(month_count, @year)
-      if month_count%3 === 0
-        month1 = month_block[0].split("\n")
-        month2 = month_block[1].split("\n")
-        month3 = month_block[2].split("\n")
-        0.upto(BLOCK_LENGTH-1) do |index|
-          row_block = "#{month1[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
-          if month1[index] === nil && month2[index] === nil && month3[index] === nil
-            row_block = "\n"
-            if index == 4
-              row_block << "\n"
-              break
-            end
-          elsif month2[index] === nil && month3[index] === nil
-            row_block = "#{month1[index]}" + "\n"
-            if index == 4
-              row_block << "\n"
-              break
-            end
-          elsif month3[index] === nil
-            row_block = "#{month1[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
-            row_block << "#{month2[index]}" + "\n"
-            if index == 4
-              row_block << "\n"
-              break
-            end
-          else
-            row_block = "#{month1[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
-            row_block << "#{month2[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
-            row_block << "#{month3[index]}" + "\n"
-          end
-          output << row_block
-        end
-        month_block = []
-        block_count += 1
-      end
     end
-    output << "\n"
-    output
+    quarter << shuffle_quarter(month_block)
+  end
+
+  def shuffle_quarter(month_block)
+    month1 = month_block[0].split("\n")
+    month2 = month_block[1].split("\n")
+    month3 = month_block[2].split("\n")
+    quarter = "\n"
+    0.upto(BLOCK_LENGTH-1) do |index|
+      quarter << "#{month1[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
+      quarter << "#{month2[index]}".ljust(Month::LINE_LENGTH) + "\s\s"
+      quarter << "#{month3[index]}" + "\n"
+    end
+    quarter
   end
 
 end

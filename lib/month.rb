@@ -11,12 +11,15 @@ class Month
     @year = Year.new(year)
   end
 
-  def name
-    MONTHS[@month]
+  def to_s
+    output = header
+    output << WEEKDAYS
+    output << build_month(@month, @year.year)
+    output
   end
 
-  def header
-    "#{name} #{@year.year}".center(LINE_LENGTH).rstrip
+  def name
+    MONTHS[@month]
   end
 
   def length
@@ -27,24 +30,8 @@ class Month
     end
   end
 
-  def build_day(count, weekday)
-    if count < 10 && weekday > 0
-      day = "\s\s#{count}"
-    elsif count >= 10 && weekday == 0
-      day = "#{count}"
-    else
-      day = "\s#{count}"
-    end
-    day
-  end
-
-  def build_week(week, align_left=false)
-    if align_left
-      return week.join
-    else
-      week << "\n"
-      return week.join.rjust(LINE_LENGTH+1)
-    end
+  def header
+    "#{name} #{@year.year}".center(LINE_LENGTH).rstrip
   end
 
   def build_month(month, year)
@@ -76,10 +63,25 @@ class Month
     output.join
   end
 
-  def to_s
-    output = header
-    output << WEEKDAYS
-    output << build_month(@month, @year.year)
-    output
+  private
+
+  def build_day(count, weekday)
+    if count < 10 && weekday > 0
+      day = "\s\s#{count}"
+    elsif count >= 10 && weekday == 0
+      day = "#{count}"
+    else
+      day = "\s#{count}"
+    end
+    day
+  end
+
+  def build_week(week, align_left=false)
+    if align_left
+      return week.join
+    else
+      week << "\n"
+      return week.join.rjust(LINE_LENGTH+1)
+    end
   end
 end
