@@ -5,6 +5,7 @@ class Month
   MONTH_LENGTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
   LINE_LENGTH = 20
   WEEKDAYS = "\nSu Mo Tu We Th Fr Sa\n"
+  MONTH_HEIGHT = 6
 
   def initialize(month, year)
     @month = month
@@ -35,18 +36,15 @@ class Month
   end
 
   def build_month(month, year)
-    day_count = 1
     first_day = ZellersCongruence.calculate(month, year)
     day_of_week_count = (first_day == 0) ? 6 : first_day - 1
     output = []
     week = []
     week_count = 0
-    until day_count == self.length + 1
-      if day_of_week_count < 7
-        week << build_day(day_count, day_of_week_count).rstrip
-        day_of_week_count +=1
-        day_count += 1
-      else
+    1.upto(self.length) do |day_count|
+      week << build_day(day_count, day_of_week_count).rstrip
+      day_of_week_count +=1
+      if day_of_week_count == 7
         output << build_week(week)
         week_count += 1
         day_of_week_count = 0
@@ -56,7 +54,7 @@ class Month
     if week.size > 0
       output << build_week(week, true)
     end
-    while week_count < 6
+    (MONTH_HEIGHT-week_count).times do |index|
       output << "\n"
       week_count += 1
     end
