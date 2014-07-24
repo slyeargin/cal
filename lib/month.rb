@@ -6,6 +6,8 @@ class Month
   LINE_LENGTH = 20
   WEEKDAYS = "\nSu Mo Tu We Th Fr Sa\n"
   MONTH_HEIGHT = 6
+  END_OF_WEEK = 7
+  FEBRUARY = 2
 
   def initialize(month, year)
     @month = month
@@ -24,7 +26,7 @@ class Month
   end
 
   def length
-    unless @month == 2 && @year.leap?
+    unless @month == FEBRUARY && @year.leap?
       return MONTH_LENGTH[@month]
     else
       return 29
@@ -44,7 +46,7 @@ class Month
     1.upto(self.length) do |day_count|
       week << build_day(day_count, day_of_week_count).rstrip
       day_of_week_count +=1
-      if day_of_week_count == 7
+      if day_of_week_count == END_OF_WEEK
         output << build_week(week)
         week_count += 1
         day_of_week_count = 0
