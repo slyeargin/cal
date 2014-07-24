@@ -5,6 +5,6 @@ class ZellersCongruence
       month += 12
       year -= 1
     end
-    (day + (((13 * (month+1))/5).floor) + (year % 100) + (((year % 100)/4).floor) + (((year / 100)/4).floor) + (5 * (year/100))) % 7
+    (day + (((13 * (month+1))/ 5).floor) + (year % 100) + (((year % 100)/4).floor) + (((year / 100)/4).floor) + (5 * (year/100))) % 7
   end
 end

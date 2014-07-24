@@ -11,6 +11,8 @@ class Year
   ]
   WEEKDAYS = "\nSu Mo Tu We Th Fr Sa\s\sSu Mo Tu We Th Fr Sa\s\sSu Mo Tu We Th Fr Sa"
   BLOCK_LENGTH = 6
+  MONTHS_IN_QUARTER = 3
+  QUARTERS_IN_YEAR = 4
 
   def initialize(year)
     @year = year
@@ -35,29 +37,25 @@ class Year
   def build_year
     year = "#{@year}".center(LINE_LENGTH).rstrip
     year << "\n\n"
-    quarter_count = 0
     month_count = 0
-    while quarter_count < 4
-      year << build_quarter(quarter_count, month_count)
-      quarter_count += 1
-      month_count += 3
+    QUARTERS_IN_YEAR.times do |quarter|
+      year << build_quarter(quarter)
+      month_count += MONTHS_IN_QUARTER
     end
     year
   end
 
-  def build_quarter(quarter_count, month_count)
+  def build_quarter(quarter_count)
     month_block = []
-    end_of_quarter = month_count + 3
-    while month_count < end_of_quarter
-      if month_count == 0 || month_count%3 === 0
-        quarter = HEADER[quarter_count]
-        quarter << WEEKDAYS
-      end
+    output = HEADER[quarter_count]
+    output << WEEKDAYS
+    month_count = quarter_count * MONTHS_IN_QUARTER
+    MONTHS_IN_QUARTER.times do |index|
       month_count += 1
       @month = Month.new(month_count, @year)
       month_block << @month.build_month(month_count, @year)
     end
-    quarter << shuffle_quarter(month_block)
+    output << shuffle_quarter(month_block)
   end
 
   def shuffle_quarter(month_block)
